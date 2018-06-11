@@ -45,6 +45,58 @@ class BinarySearchTree
         end
     end
 
+    def get_parent(value, node=@root_node, parent_node=nil)
+        return nil if node.nil?
+        if value < node.value
+            get_parent(value, node.left_node, node)
+        elsif value > node.value
+            get_parent(value, node.right_node, node)
+        else
+            return parent_node
+        end
+    end
+
+    def remove(node_value, node=@root_node)
+        parent = self.get_parent(node_value) if focus_node != @root_node
+        if focus_node.left_node.nil? && focus_node.right_node.nil?
+            # The node has NO leafs
+            if focus_node == @root_node
+                # The node is root
+                @root_node = nil
+            else
+                # The Node is not the root
+                parent.right_node == node ? parent.right_node = nil : parent.left_node = nil
+            end
+        elsif focus_node.left_node.nil?
+            # The node has no left leaf
+            if focus_node == @root_node
+                # The node is a root
+                @root = focus_node.right_node
+            elsif parent.right_node == focus_node
+                # The node is a right child
+                parent.right_node = focus_node.right_node
+            elsif parent.left_node == focus_node
+                # The node is a left child
+                parent.left_node = focus_node.right_node
+            end
+        elsif focus_node.right_node.nil?
+            #The node has not right leaf
+            if focus_node == @root
+                @root = focus_node.left_node
+            elsif parent.right_node == focus_node
+                parent.right_node = focus_node.left_node
+            elsif parent.left_node == focus_node
+                parent.left_node = focus_node.left_node
+            end
+        else
+            #The node has both leafs
+        end
+
+            
+
+        end
+    end
+
     class Node
         attr_reader :value, :right_node, :left_node
     
@@ -97,3 +149,6 @@ end
 
 puts "Search a node: "
 puts search_tree.search(12).to_s
+
+puts "\nGet parent of node: \n"
+puts search_tree.get_parent(5).to_s
